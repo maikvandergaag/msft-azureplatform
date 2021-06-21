@@ -1,0 +1,57 @@
+{
+ "properties": {
+  "displayName": "Audit Resource Locks on Resource Groups based on Tags",
+  "policyType": "Custom",
+  "mode": "All",
+  "metadata": {
+   "category": "Custom",
+   "createdBy": "f275e010-27ad-4b3b-8c33-e9aac30fded4",
+   "createdOn": "2019-05-03T05:58:02.4232489Z",
+   "updatedBy": null,
+   "updatedOn": null
+  },
+  "parameters": {
+   "tagName": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Tag Name",
+     "description": "The Tag namne to audit against (i.e. Environment, CostCenter, etc.)"
+    }
+   },
+   "tagValue": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Tag Value",
+     "description": "Value of the tag to audit against (i.e. Prod/UAT/TEST, 12345, etc.)"
+    }
+   }
+  },
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "field": "type",
+      "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+     },
+     {
+      "field": "[concat('tags[', parameters('tagName'), ']')]",
+      "equals": "[parameters('tagValue')]"
+     }
+    ]
+   },
+   "then": {
+    "effect": "auditIfNotExists",
+    "details": {
+     "type": "Microsoft.Authorization/locks",
+     "existenceCondition": {
+      "field": "Microsoft.Authorization/locks/level",
+      "equals": "CanNotDelete"
+     }
+    }
+   }
+  }
+ },
+ "id": "/providers/Microsoft.Management/managementGroups/324f7296-1869-4489-b11e-912351f38ead/providers/Microsoft.Authorization/policyDefinitions/95e460b2-bf20-442d-921b-17be2f7e149e",
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "95e460b2-bf20-442d-921b-17be2f7e149e"
+}
