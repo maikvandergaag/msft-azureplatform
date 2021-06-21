@@ -1,0 +1,199 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vnetSpokeName": {
+      "type": "string",
+      "defaultValue": "azvnet-spoke-general"
+    },
+    "vnetSpokeAddressPrefix": {
+      "type": "string",
+      "defaultValue": "10.100.0.0/16"
+    },
+    "vnetSpokeSubnetName": {
+      "type": "string",
+      "defaultValue": "azvnet-spoke-resources"
+    },
+    "vnetSpokeSubnetAddressPrefix": {
+      "type": "string",
+      "defaultValue": "[parameters('vnetSpokeAddressPrefix')]"
+    },
+    "vnetSpokeNSGName": {
+      "type": "string",
+      "defaultValue": "aznsg-subnet-spoke"
+    },
+    "hubVnetworkName": {
+      "type": "string",
+      "defaultValue": "azvnet-hub"
+    },
+    "logAnalyticsWorkspaceName": {
+      "type": "string",
+      "defaultValue": "azla-workspace-general"
+    },
+    "hubSubscriptionId": {
+      "type": "string"
+    },
+    "hubResourceGroupName": {
+      "type": "string",
+      "defaultValue": "gaag-rg-vnethub"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    }
+  },
+  "functions": [],
+  "resources": [
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2020-06-01",
+      "name": "[parameters('vnetSpokeNSGName')]",
+      "location": "[parameters('location')]",
+      "properties": {}
+    },
+    {
+      "type": "microsoft.insights/diagnosticSettings",
+      "apiVersion": "2017-05-01-preview",
+      "scope": "[format('Microsoft.Network/networkSecurityGroups/{0}', parameters('vnetSpokeNSGName'))]",
+      "name": "azvnet-diag",
+      "properties": {
+        "workspaceId": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('hubSubscriptionId'), parameters('hubResourceGroupName')), 'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName'))]",
+        "logs": [
+          {
+            "category": "NetworkSecurityGroupEvent",
+            "enabled": true
+          },
+          {
+            "category": "NetworkSecurityGroupRuleCounter",
+            "enabled": true
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('vnetSpokeNSGName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2020-06-01",
+      "name": "[parameters('vnetSpokeName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('vnetSpokeAddressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters('vnetSpokeSubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('vnetSpokeSubnetAddressPrefix')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('vnetSpokeNSGName'))]"
+              }
+            }
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('vnetSpokeNSGName'))]"
+      ]
+    },
+    {
+      "type": "microsoft.insights/diagnosticSettings",
+      "apiVersion": "2017-05-01-preview",
+      "scope": "[format('Microsoft.Network/virtualNetworks/{0}', parameters('vnetSpokeName'))]",
+      "name": "diagVnetSpoke",
+      "properties": {
+        "workspaceId": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('hubSubscriptionId'), parameters('hubResourceGroupName')), 'Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName'))]",
+        "logs": [
+          {
+            "category": "VMProtectionAlerts",
+            "enabled": true
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetSpokeName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+      "apiVersion": "2020-06-01",
+      "name": "[format('{0}/spoke-to-hub', parameters('vnetSpokeName'))]",
+      "properties": {
+        "allowVirtualNetworkAccess": true,
+        "allowForwardedTraffic": true,
+        "allowGatewayTransit": false,
+        "useRemoteGateways": false,
+        "remoteVirtualNetwork": {
+          "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('hubSubscriptionId'), parameters('hubResourceGroupName')), 'Microsoft.Network/virtualNetworks', parameters('hubVnetworkName'))]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetSpokeName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "peering",
+      "subscriptionId": "[parameters('hubSubscriptionId')]",
+      "resourceGroup": "[parameters('hubResourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "localVnetName": {
+            "value": "[parameters('hubVnetworkName')]"
+          },
+          "remoteVnetId": {
+            "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetSpokeName'))]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "localVnetName": {
+              "type": "string"
+            },
+            "remoteVnetId": {
+              "type": "string"
+            }
+          },
+          "functions": [],
+          "resources": [
+            {
+              "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+              "apiVersion": "2020-05-01",
+              "name": "[format('{0}/peering-to-remote-vnet', parameters('localVnetName'))]",
+              "properties": {
+                "allowVirtualNetworkAccess": true,
+                "allowForwardedTraffic": true,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": false,
+                "remoteVirtualNetwork": {
+                  "id": "[parameters('remoteVnetId')]"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetSpokeName'))]"
+      ]
+    }
+  ],
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.3.126.58533",
+      "templateHash": "14270327626480297792"
+    }
+  }
+}

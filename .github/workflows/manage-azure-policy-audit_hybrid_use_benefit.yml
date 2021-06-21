@@ -1,4 +1,4 @@
-name: manage-azure-policy-6a3125af
+name: manage-azure-policy-audit_hybrid_use_benefit
 on:
   workflow_dispatch:
     inputs:
@@ -8,12 +8,11 @@ on:
         default: 'Updating Azure Policies'
 
 
-## Uncomment the following if you wish to automatically trigger workflow run with every commit
-#
-#  push:
-#    paths:
-#      - 'policies/Deploy_Resource_Locks_on_Resource_Groups_based_on_Tags_ac13b3ca-220d-4164-9f47-0952f537d4ab/**'
-#      - .github/workflows/manage-azure-policy-6a3125af.yml
+push:
+   paths:
+     - 'policies/audit_hybrid_use_benefit/**'
+     - .github/workflows/manage-azure-policy-audit_hybrid_use_benefit.yml
+
 jobs:
   apply-azure-policy:
     runs-on: ubuntu-latest
@@ -23,10 +22,10 @@ jobs:
     - name: Login to Azure
       uses: azure/login@v1
       with:
-        creds: ${{secrets.AZURE_CREDENTIALS_6a3125af}}
+        creds: ${{secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP}}
         allow-no-subscriptions: true
     - name: Create or Update Azure Policies
       uses: azure/manage-azure-policy@v0
       with:
         paths: |
-          policies/Deploy_Resource_Locks_on_Resource_Groups_based_on_Tags_ac13b3ca-220d-4164-9f47-0952f537d4ab/**
+          policies/audit_hybrid_use_benefit/**

@@ -1,4 +1,4 @@
-name: manage-azure-policy-698fa840
+name: manage-azure-policy-deploy_resource_locks_on_resource_groups_based_on_tags
 on:
   workflow_dispatch:
     inputs:
@@ -6,14 +6,10 @@ on:
         description: 'Reason for triggering the workflow run'
         required: false
         default: 'Updating Azure Policies'
-
-
-## Uncomment the following if you wish to automatically trigger workflow run with every commit
-#
-#  push:
-#    paths:
-#      - 'policies/policies/Resource_Group_Naming_4dacb992-e822-4106-9fb9-009b24b7b09f/**'
-#      - .github/workflows/manage-azure-policy-698fa840.yml
+push:
+  paths:
+    - 'policies/deploy_resource_locks_on_resource_groups_based_on_tags/**'
+    - .github/workflows/manage-azure-policy-deploy_resource_locks_on_resource_groups_based_on_tags.yml
 jobs:
   apply-azure-policy:
     runs-on: ubuntu-latest
@@ -23,10 +19,10 @@ jobs:
     - name: Login to Azure
       uses: azure/login@v1
       with:
-        creds: ${{secrets.AZURE_CREDENTIALS_698fa840}}
+        creds: ${{secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP}}
         allow-no-subscriptions: true
     - name: Create or Update Azure Policies
       uses: azure/manage-azure-policy@v0
       with:
         paths: |
-          policies/policies/Resource_Group_Naming_4dacb992-e822-4106-9fb9-009b24b7b09f/**
+          policies/deploy_resource_locks_on_resource_groups_based_on_tags/**

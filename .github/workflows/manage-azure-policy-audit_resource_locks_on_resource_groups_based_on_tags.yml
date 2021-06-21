@@ -1,4 +1,4 @@
-name: manage-azure-policy-0db30225
+name: manage-azure-policy-audit_resource_locks_on_resource_groups_based_on_tags
 on:
   workflow_dispatch:
     inputs:
@@ -6,14 +6,10 @@ on:
         description: 'Reason for triggering the workflow run'
         required: false
         default: 'Updating Azure Policies'
-
-
-## Uncomment the following if you wish to automatically trigger workflow run with every commit
-#
-#  push:
-#    paths:
-#      - 'policies/policies/Audit_Resource_Locks_on_Resource_Groups_based_on_Tags_95e460b2-bf20-442d-921b-17be2f7e149e/**'
-#      - .github/workflows/manage-azure-policy-0db30225.yml
+push:
+  paths:
+    - 'policies/policies/audit_resource_locks_on_resource_groups_based_on_tags/**'
+    - .github/workflows/manage-azure-policy-audit_resource_locks_on_resource_groups_based_on_tags.yml
 jobs:
   apply-azure-policy:
     runs-on: ubuntu-latest
@@ -23,10 +19,11 @@ jobs:
     - name: Login to Azure
       uses: azure/login@v1
       with:
-        creds: ${{secrets.AZURE_CREDENTIALS_0db30225}}
+        creds: ${{secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP}}
         allow-no-subscriptions: true
     - name: Create or Update Azure Policies
       uses: azure/manage-azure-policy@v0
       with:
         paths: |
-          policies/policies/Audit_Resource_Locks_on_Resource_Groups_based_on_Tags_95e460b2-bf20-442d-921b-17be2f7e149e/**
+          policies/audit_resource_locks_on_resource_groups_based_on_tags/**
+
