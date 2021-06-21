@@ -1,0 +1,42 @@
+{
+ "sku": {
+  "name": "A0",
+  "tier": "Free"
+ },
+ "identity": {
+  "principalId": "1c22f75d-e842-4af2-b653-17891ea501f8",
+  "tenantId": "324f7296-1869-4489-b11e-912351f38ead",
+  "type": "SystemAssigned"
+ },
+ "properties": {
+  "displayName": "Resource Locks - Deploy Resource Locks based on Tags - Prod",
+  "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/324f7296-1869-4489-b11e-912351f38ead/providers/Microsoft.Authorization/policyDefinitions/ac13b3ca-220d-4164-9f47-0952f537d4ab",
+  "scope": "/providers/Microsoft.Management/managementGroups/all",
+  "notScopes": [
+   "/subscriptions/5b389701-0e47-4738-b4fe-ddb67ac3a036/resourceGroups/gaag-rg-dns",
+   "/subscriptions/f124b668-7e3d-4b53-ba80-09c364def1f3/resourceGroups/MC_sponsor-rg-k8shared_azkubernetes-shared_westeurope"
+  ],
+  "parameters": {
+   "tagName": {
+    "value": "environment"
+   },
+   "tagValue": {
+    "value": "prod"
+   }
+  },
+  "description": "",
+  "metadata": {
+   "assignedBy": "Maik van der Gaag",
+   "parameterScopes": {},
+   "createdBy": "f275e010-27ad-4b3b-8c33-e9aac30fded4",
+   "createdOn": "2019-05-20T13:36:40.7957688Z",
+   "updatedBy": "f275e010-27ad-4b3b-8c33-e9aac30fded4",
+   "updatedOn": "2021-06-04T07:12:16.3032913Z"
+  },
+  "enforcementMode": "Default"
+ },
+ "id": "/providers/Microsoft.Management/managementGroups/all/providers/Microsoft.Authorization/policyAssignments/bb06e8b78cee46cf9753ceb2",
+ "type": "Microsoft.Authorization/policyAssignments",
+ "name": "bb06e8b78cee46cf9753ceb2",
+ "location": "westeurope"
+}

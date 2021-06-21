@@ -1,0 +1,88 @@
+{
+ "properties": {
+  "displayName": "Deploy Resource Locks on Resource Groups based on Tags",
+  "policyType": "Custom",
+  "mode": "All",
+  "metadata": {
+   "category": "Custom",
+   "createdBy": "f275e010-27ad-4b3b-8c33-e9aac30fded4",
+   "createdOn": "2019-05-03T05:43:09.732527Z",
+   "updatedBy": "f275e010-27ad-4b3b-8c33-e9aac30fded4",
+   "updatedOn": "2019-06-11T21:35:38.9030219Z"
+  },
+  "parameters": {
+   "tagName": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Tag Name",
+     "description": "The name of the tag to check against."
+    }
+   },
+   "tagValue": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Tag Value",
+     "description": "Value of the tag to check against"
+    }
+   }
+  },
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "field": "type",
+      "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+     },
+     {
+      "field": "[concat('tags[', parameters('tagName'), ']')]",
+      "equals": "[parameters('tagValue')]"
+     }
+    ]
+   },
+   "then": {
+    "effect": "deployIfNotExists",
+    "details": {
+     "type": "Microsoft.Authorization/locks",
+     "roleDefinitionIds": [
+      "/providers/microsoft.authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+     ],
+     "existenceCondition": {
+      "field": "Microsoft.Authorization/locks/level",
+      "equals": "CanNotDelete"
+     },
+     "deployment": {
+      "properties": {
+       "mode": "incremental",
+       "template": {
+        "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+        "contentVersion": "1.0.0.0",
+        "parameters": {},
+        "variables": {},
+        "resources": [
+         {
+          "name": "DontDelete",
+          "type": "Microsoft.Authorization/locks",
+          "apiVersion": "2017-04-01",
+          "properties": {
+           "level": "CanNotDelete",
+           "notes": "Prevent deletion of the resourceGroup"
+          }
+         }
+        ],
+        "outputs": {
+         "policy": {
+          "type": "string",
+          "value": "[concat('Added resource lock')]"
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "id": "/providers/Microsoft.Management/managementGroups/324f7296-1869-4489-b11e-912351f38ead/providers/Microsoft.Authorization/policyDefinitions/ac13b3ca-220d-4164-9f47-0952f537d4ab",
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "ac13b3ca-220d-4164-9f47-0952f537d4ab"
+}
