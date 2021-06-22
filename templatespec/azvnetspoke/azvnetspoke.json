@@ -8,7 +8,7 @@
     },
     "vnetSpokeAddressPrefix": {
       "type": "string",
-      "defaultValue": "10.100.0.0/16"
+      "defaultValue": "11.0.1.0/24"
     },
     "vnetSpokeSubnetName": {
       "type": "string",

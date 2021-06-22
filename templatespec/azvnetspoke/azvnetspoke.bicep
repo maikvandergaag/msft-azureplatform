@@ -1,8 +1,8 @@
 //vnet spoke
 param vnetSpokeName string = 'azvnet-spoke-general'
-param vnetSpokeAddressPrefix string = '10.100.0.0/16'
+param vnetSpokeAddressPrefix string = '11.1.1.0/16'
 param vnetSpokeSubnetName string = 'azvnet-spoke-resources'
-param vnetSpokeSubnetAddressPrefix string = vnetSpokeAddressPrefix
+param vnetSpokeSubnetAddressPrefix string = '11.1.1.0/24'
 param vnetSpokeNSGName string = 'aznsg-subnet-spoke'
 
 //vnet hub
