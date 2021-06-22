@@ -1,4 +1,4 @@
-name: Template spec - Internal VM
+name: Template spec - Hub virtual network
  
 on:
   push:
