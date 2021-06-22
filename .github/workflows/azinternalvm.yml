@@ -8,7 +8,12 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
- 
+
+env:
+  major: 1
+  minor: 0
+  patch: 0
+
 jobs:
   build:
     runs-on: ubuntu-latest
