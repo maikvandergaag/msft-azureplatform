@@ -10,7 +10,6 @@ on:
   workflow_dispatch:
  
 jobs:
-  environment: platform
   build:
     runs-on: ubuntu-latest
     steps:
@@ -20,7 +19,7 @@ jobs:
           chmod +x ./bicepinstall
           sudo mv ./bicepinstall /usr/local/bin/bicep
           bicep --help
-      - run:    bicep build ./04-bicepmoduletemplatespec/04-bicepmoduletemplatespec.bicep   
+      - run:    bicep build ./templatespec/azinternalvm/azinternalvm.bicep   
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
