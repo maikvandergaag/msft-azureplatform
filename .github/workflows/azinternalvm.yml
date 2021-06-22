@@ -13,8 +13,6 @@ on:
 
 env:
   specName: az-tempspec-internalvm
-  specfolder: './templatespec/azinternalvm/azinternalvm.bicep'
-  resourcegroup: gaag-rg-templates
 
 jobs:
   build:
