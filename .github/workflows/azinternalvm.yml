@@ -28,7 +28,7 @@ jobs:
       - name: Git Semantic Version
         uses: PaulHatch/semantic-version@v4.0.2
         with:
-          format: format: ${major}.${minor}.${patch}-prerelease${increment}
+          format: ${major}.${minor}.${patch}-prerelease${increment}
           change_path: templatespec/azinternalvm
           bump_each_commit: true
 
