@@ -39,15 +39,14 @@ jobs:
        - uses: actions/download-artifact@v2
          with:
              name: dist-without-markdown
-       - name: directory
-         run: ls -R
        - name: Azure Login
          uses: Azure/login@v1
          with:
            creds: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
            enable-AzPSSession: true 
-       - name: Run Azure PowerShell script
+       - name: Check versionnumber
          uses: azure/powershell@v1
+         id: calculate
          with:
            inlineScript: |
             $version = (Get-AzTemplateSpec -Name "${{env.specName}}" -ResourceGroupName "${{env.resourcegroup}}" -ErrorAction SilentlyContinue).Versions.Name
@@ -64,11 +63,11 @@ jobs:
                 echo "::set-output name=versionnumber::0.1"
             }
            azPSVersion: '6.1.0'
-       - name: Run Azure PowerShell script
+       - name: Create / Update template spec
          uses: azure/powershell@v1
          with:
            inlineScript: |
-            New-AzTemplateSpec -Name "${{env.specName}}" -Version "${{env.versionnumber}}" -ResourceGroupName "${{env.resourcegroup}}" -Location "westeurope" -TemplateFile ".\${{env.specfilename}}"
+            New-AzTemplateSpec -Name "${{env.specName}}" -Version " ${{ steps.calculate.outputs.versionnumber }}"" -ResourceGroupName "${{env.resourcegroup}}" -Location "westeurope" -TemplateFile ".\${{env.specfilename}}"
            azPSVersion: '6.1.0'
 
 
