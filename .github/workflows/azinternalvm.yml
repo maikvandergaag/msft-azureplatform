@@ -68,7 +68,7 @@ jobs:
          uses: azure/powershell@v1
          with:
            inlineScript: |
-            New-AzTemplateSpec -Name "${{env.specName}}" -Version "${{env.versionnumber}}" -ResourceGroupName "${{env.resourcegroup}}" -Location "westeurope" -TemplateFile ".\${{specfilename}}"
+            New-AzTemplateSpec -Name "${{env.specName}}" -Version "${{env.versionnumber}}" -ResourceGroupName "${{env.resourcegroup}}" -Location "westeurope" -TemplateFile ".\${{env.specfilename}}"
            azPSVersion: '6.1.0'
 
 
