@@ -14,6 +14,7 @@ on:
 env:
   specName: az-tempspec-internalvm
   specfolder: './templatespec/azinternalvm/azinternalvm'
+  specfilename: azinternalvm.json
   resourcegroup: gaag-rg-templates
 
 jobs:
@@ -62,6 +63,12 @@ jobs:
             }else{
                 echo "::set-output name=versionnumber::0.1"
             }
+           azPSVersion: '6.1.0'
+       - name: Run Azure PowerShell script
+         uses: azure/powershell@v1
+         with:
+           inlineScript: |
+            New-AzTemplateSpec -Name "${{env.specName}}" -Version "${{env.versionnumber}}" -ResourceGroupName "${{env.resourcegroup}}" -Location "westeurope" -TemplateFile ".\${{specfilename}}"
            azPSVersion: '6.1.0'
 
 
