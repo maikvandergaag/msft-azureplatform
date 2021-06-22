@@ -1,18 +1,18 @@
 //vnet
 param hubVnetworkName string = 'azvnet-hub' 
-param hubVnetAddressPrefix string = '10.0.0.0/20'
+param hubVnetAddressPrefix string = '11.0.0.0/8'
 
 //bastion
 param bastionHostName string = 'azbastion-general'
 param bastionPublicIPName string = 'azpip-bastion'
 param bastionSubnet string = 'AzureBastionSubnet'
 param bastionSubnetNSG string = 'aznsg-subnet-bastion'
-param bastionSubnetPrefix string = '10.0.1.0/29'
+param bastionSubnetPrefix string = '11.0.1.0/29'
 
 //VPN Gateway
 param vpnGatewayName string = 'azgw-general'
 param vpnGatewaySubnetName string = 'GatewaySubnet'
-param vpnGatewaySubnetPrefix string = '10.0.2.0/27'
+param vpnGatewaySubnetPrefix string = '11.0.2.0/27'
 param vpnGatewayPublicIPName string = 'azpip-gateway'
 
 //Log Analytics

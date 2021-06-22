@@ -1,0 +1,38 @@
+name: TemplateSpec - Internal VM
+ 
+on:
+  push:
+    paths:
+      - 'templatespec/azinternalvm'
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+ 
+jobs:
+  environment: platform
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: | 
+          curl -Lo bicepinstall https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64
+          chmod +x ./bicepinstall
+          sudo mv ./bicepinstall /usr/local/bin/bicep
+          bicep --help
+      - run:    bicep build ./04-bicepmoduletemplatespec/04-bicepmoduletemplatespec.bicep   
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-without-markdown
+          path: ./**/*.json
+      - name: Git Semantic Version
+        uses: PaulHatch/semantic-version@v4.0.2
+        major_pattern: "(MAJOR)"
+        minor_pattern: "(MINOR)"
+        format: "${major}.${minor}.${patch}"
+        change_path: "templatespec/azinternalvm"
+        short_tags: false
+        bump_each_commit: true
+
+ 
