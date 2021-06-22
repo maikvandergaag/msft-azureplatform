@@ -13,6 +13,8 @@ on:
 
 env:
   specName: az-tempspec-internalvm
+  specfolder: './templatespec/azinternalvm/azinternalvm.bicep'
+  resourcegroup: gaag-rg-templates
 
 jobs:
   build:
@@ -24,7 +26,7 @@ jobs:
           chmod +x ./bicepinstall
           sudo mv ./bicepinstall /usr/local/bin/bicep
           bicep --help
-      - run:    bicep build ${{specfolder}}
+      - run:    bicep build ${{env.specfolder}}
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -47,7 +49,7 @@ jobs:
          uses: azure/powershell@v1
          with:
            inlineScript: |
-            $version = (Get-AzTemplateSpec -Name "${{specName}}" -ResourceGroupName "${{resourcegroup}}" -ErrorAction SilentlyContinue).Versions.Name
+            $version = (Get-AzTemplateSpec -Name "${{env.specName}}" -ResourceGroupName "${{env.resourcegroup}}" -ErrorAction SilentlyContinue).Versions.Name
             if($version){
                 $minor = [int]$version.Split('.')[1]
                 $major =
