@@ -8,6 +8,14 @@ on:
   pull_request:
     branches: [ main ]
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  specName: az-tempspec-internalvm
+  folder: ./templatespec/azinternalvm/azinternalvm.bicep
+  resourcegroup: gaag-rg-templates
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,17 +26,44 @@ jobs:
           chmod +x ./bicepinstall
           sudo mv ./bicepinstall /usr/local/bin/bicep
           bicep --help
-      - run:    bicep build ./templatespec/azinternalvm/azinternalvm.bicep   
+      - run:    bicep build ${{folder}}
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: dist-without-markdown
           path: ./**/*.json
-      - name: Git Semantic Version
-        uses: PaulHatch/semantic-version@v4.0.2
-        with:
-          format: ${major}.${minor}.${patch}-prerelease${increment}
-          change_path: templatespec/azinternalvm
-          bump_each_commit: true
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+       - uses: actions/download-artifact@v2
+         with:
+             name: dist-without-markdown
+       - name: directory
+         run: ls -R
+       - name: Azure Login
+         uses: Azure/login@v1
+         with:
+           creds: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
+           enable-AzPSSession: true 
+       - name: Run Azure PowerShell script
+         uses: azure/powershell@v1
+         with:
+           inlineScript: |
+            $version = (Get-AzTemplateSpec -Name "${{specName}}" -ResourceGroupName "${{resourcegroup}}" -ErrorAction SilentlyContinue).Versions.Name
+            if($version){
+                $minor = [int]$version.Split('.')[1]
+                $major =
+                [int]$version.Split('.')[0]
+                $minor = $minor + 1
+                if($minor -eq 9){
+                    $major = $major + 1
+                }
+                echo "::set-output name=versionnumber::$major.$minor"
+            }else{
+                echo "::set-output name=versionnumber::0.1"
+            }
+
+
+ 
 
  
