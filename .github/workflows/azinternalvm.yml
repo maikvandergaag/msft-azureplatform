@@ -3,11 +3,12 @@ name: TemplateSpec - Internal VM
 on:
   push:
     paths:
-      - 'templatespec/azinternalvm'
+      - 'templatespec/azinternalvm/*'
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
+  
+    workflow_dispatch:
 
 jobs:
   build:
