@@ -14,7 +14,7 @@ param privateIP string
 //internal networking
 param localVnetName string
 param subnetName string = 'azvnet-spoke-resources'
-param networkResourceGroupName string
+param networkResourceGroup string
 
 module internalvm '../../.module/virtual-machine.bicep' ={
   name: 'internalvm'
@@ -31,5 +31,5 @@ module internalvm '../../.module/virtual-machine.bicep' ={
 
 resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
   name: '${localVnetName}/${subnetName}'
-  scope: resourceGroup(networkResourceGroupName)
+  scope: resourceGroup(networkResourceGroup)
 }
