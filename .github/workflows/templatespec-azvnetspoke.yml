@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 env:
-  specName: az-tempspec-azvnetspoke
+  specName: az-tempspec-vnetspoke
   specfolder: './templatespec/azvnetspoke/azvnetspoke'
   specfilename: azvnetspoke.json
   resourcegroup: gaag-rg-templates
