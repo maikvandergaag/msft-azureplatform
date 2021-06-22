@@ -43,9 +43,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
        - uses: actions/download-artifact@v2
+         name: Download template spec
          with:
              name: ${{env.specName}}
        - uses: actions/download-artifact@v2
+         name: Download utility scripts
          with:
              name: ps-${{env.specName}}
        - name: Azure Login
