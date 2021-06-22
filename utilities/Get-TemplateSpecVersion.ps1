@@ -39,6 +39,7 @@ process{
         $minor = $minor + 1
         if($minor -eq 9){
             $major = $major + 1
+            $minor = 0
         }
         echo "::set-output name=versionnumber::$major.$minor"
     }else{
