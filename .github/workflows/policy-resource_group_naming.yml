@@ -1,4 +1,4 @@
-name: manage-azure-policy-deploy_resource_locks_on_resource_groups_based_on_tags
+name: Policy - Resource group naming
 on:
   workflow_dispatch:
     inputs:
@@ -8,8 +8,9 @@ on:
         default: 'Updating Azure Policies'
   push:
     paths:
-      - 'policies/deploy_resource_locks_on_resource_groups_based_on_tags/**'
-      - .github/workflows/manage-azure-policy-deploy_resource_locks_on_resource_groups_based_on_tags.yml
+       - 'policies/policies/resource_group_naming/**'
+       - .github/workflows/policy-resource_group_naming.yml
+
 jobs:
   apply-azure-policy:
     runs-on: ubuntu-latest
@@ -25,4 +26,4 @@ jobs:
       uses: azure/manage-azure-policy@v0
       with:
         paths: |
-          policies/deploy_resource_locks_on_resource_groups_based_on_tags/**
+          policies/resource_group_naming/**
