@@ -62,7 +62,7 @@ jobs:
             }else{
                 echo "::set-output name=versionnumber::0.1"
             }
-           azPSVersion: '3.1.0'
+           azPSVersion: '6.1.0'
 
 
  
