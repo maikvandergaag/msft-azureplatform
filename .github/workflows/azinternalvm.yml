@@ -51,6 +51,7 @@ jobs:
            inlineScript: |
             $version = (Get-AzTemplateSpec -Name "${{env.specName}}" -ResourceGroupName "${{env.resourcegroup}}" -ErrorAction SilentlyContinue).Versions.Name
             if($version){
+                $version= $version[$version.length -1]
                 $minor = [int]$version.Split('.')[1]
                 $major =
                 [int]$version.Split('.')[0]

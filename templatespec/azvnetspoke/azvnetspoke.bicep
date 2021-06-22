@@ -95,6 +95,7 @@ module peerHubSpoke '../../.module/vnet-peering.bicep'={
   params:{
     localVnetName:vnetHub.name
     remoteVnetId: vnetSpoke.id
+    allowGatewayTransit:true
   }
   scope: resourceGroup(hubSubscriptionId, hubResourceGroupName)
 }
@@ -105,7 +106,7 @@ resource peerSpokeHub 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@
     allowVirtualNetworkAccess: true
     allowForwardedTraffic: true
     allowGatewayTransit: false
-    useRemoteGateways: false
+    useRemoteGateways: true
     remoteVirtualNetwork: {
       id: vnetHub.id
     }
