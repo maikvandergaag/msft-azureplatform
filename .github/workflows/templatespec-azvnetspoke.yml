@@ -1,0 +1,78 @@
+name: Template spec - Internal VM
+ 
+on:
+  push:
+    paths:
+      - 'templatespec/azinternalvm/*'
+      - .github/workflows/templatespec-azvnetspoke.yml
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  specName: az-tempspec-azvnetspoke
+  specfolder: './templatespec/azvnetspoke/azvnetspoke'
+  specfilename: azvnetspoke.json
+  resourcegroup: gaag-rg-templates
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: | 
+          curl -Lo bicepinstall https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64
+          chmod +x ./bicepinstall
+          sudo mv ./bicepinstall /usr/local/bin/bicep
+          bicep --help
+      - run:    bicep build ${{env.specfolder}}.bicep
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-without-markdown
+          path: ${{env.specfolder}}.json
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+       - uses: actions/download-artifact@v2
+         with:
+             name: dist-without-markdown
+       - name: Azure Login
+         uses: Azure/login@v1
+         with:
+           creds: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
+           enable-AzPSSession: true 
+       - name: Check versionnumber
+         uses: azure/powershell@v1
+         id: calculate
+         with:
+           inlineScript: |
+            $version = (Get-AzTemplateSpec -Name "${{env.specName}}" -ResourceGroupName "${{env.resourcegroup}}" -ErrorAction SilentlyContinue).Versions.Name
+            if($version){
+                $version= $version[$version.length -1]
+                $minor = [int]$version.Split('.')[1]
+                $major =
+                [int]$version.Split('.')[0]
+                $minor = $minor + 1
+                if($minor -eq 9){
+                    $major = $major + 1
+                }
+                echo "::set-output name=versionnumber::$major.$minor"
+            }else{
+                echo "::set-output name=versionnumber::0.1"
+            }
+           azPSVersion: '6.1.0'
+       - name: Create / Update template spec
+         uses: azure/powershell@v1
+         with:
+           inlineScript: |
+            New-AzTemplateSpec -Name "${{env.specName}}" -Version "${{ steps.calculate.outputs.versionnumber }}" -ResourceGroupName "${{env.resourcegroup}}" -Location "westeurope" -TemplateFile ".\${{env.specfilename}}"
+           azPSVersion: '6.1.0'
+
+
+ 
+
+ 
