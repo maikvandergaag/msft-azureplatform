@@ -1,6 +1,6 @@
 //vnet
 param hubVnetworkName string = 'azvnet-hub' 
-param hubVnetAddressPrefix string = '11.0.0.0/8'
+param hubVnetAddressPrefix string = '11.0.0.0/16'
 
 //bastion
 param bastionHostName string = 'azbastion-general'
