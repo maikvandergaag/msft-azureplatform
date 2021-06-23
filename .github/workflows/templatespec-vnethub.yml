@@ -5,6 +5,7 @@ on:
     paths:
       - 'templatespec/vnethub/*'
       - .github/workflows/templatespec-vnethub.yml
+      - .module/log-analytics.bicep
     branches: [ main ]
   pull_request:
     branches: [ main ]
