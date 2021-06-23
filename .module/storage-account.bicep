@@ -11,7 +11,7 @@ param vnetSubNetId string
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
     name: accountName
     location: location
-    kind: 'Storage'
+    kind: 'StorageV2'
     sku: {
       name: 'Standard_LRS'
     }
@@ -22,15 +22,35 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2019-06-01' = {
       allowBlobPublicAccess: false
       allowSharedKeyAccess: true
       networkAcls: {
-      bypass: 'AzureServices'
-      defaultAction: 'Deny'
-      virtualNetworkRules: [
-        {
-          id: vnetSubNetId
-          action: 'Allow'
+        bypass: 'AzureServices'
+        defaultAction: 'Deny'
+        virtualNetworkRules: [
+          {
+            id: vnetSubNetId
+            action: 'Allow'
+          }
+        ]
+      }
+      encryption: {
+        services: {
+          file: {
+            keyType: 'Account'
+            enabled: true
+          }
+          blob: {
+            keyType: 'Account'
+            enabled: true
+          }
         }
-      ]
-    }
+        keySource: 'Microsoft.Storage'
+      }
+  }
+}
+
+resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2019-06-01' = {
+  name: '${storageAccount.name}/default/filecontent'
+  properties: {
+    shareQuota: 5
   }
 }
 
