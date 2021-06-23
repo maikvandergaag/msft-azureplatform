@@ -5,6 +5,7 @@ on:
     paths:
       - 'templatespec/azinternalvm/*'
       - .github/workflows/templatespec-azinternalvm.yml
+      - .module/virtual-machine.bicep
     branches: [ main ]
   pull_request:
     branches: [ main ]

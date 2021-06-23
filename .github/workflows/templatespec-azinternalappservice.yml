@@ -1,11 +1,10 @@
-name: Template spec - Azure Virtual Desktop
+name: Template spec - Hub virtual network
  
 on:
   push:
     paths:
-      - 'templatespec/azavd/*'
-      - .github/workflows/templatespec-azavd.yml
-      - .module/avd-backplane.bicep
+      - 'templatespec/azinternalappservice/*'
+      - .github/workflows/templatespec-azinternalappservice.yml
     branches: [ main ]
   pull_request:
     branches: [ main ]
@@ -14,9 +13,9 @@ on:
   workflow_dispatch:
 
 env:
-  specName: az-tempspec-avd
-  specfolder: './templatespec/azavd/azavd'
-  specfilename: azavd.json
+  specName: az-tempspec-internalappservice
+  specfolder: './templatespec/azinternalappservice/azinternalappservice'
+  specfilename: azinternalappservice.json
   resourcegroup: gaag-rg-templates
 
 jobs:
@@ -30,7 +29,7 @@ jobs:
           sudo mv ./bicepinstall /usr/local/bin/bicep
           bicep --help
       - run:    bicep build ${{env.specfolder}}.bicep
-      - name: Archive production specs
+      - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: ${{env.specName}}
@@ -70,8 +69,3 @@ jobs:
            inlineScript: |
             New-AzTemplateSpec -Name "${{env.specName}}" -Version "${{ steps.calculate.outputs.versionnumber }}" -ResourceGroupName "${{env.resourcegroup}}" -Location "westeurope" -TemplateFile ".\${{env.specfilename}}"
            azPSVersion: '6.1.0'
-
-
- 
-
- 

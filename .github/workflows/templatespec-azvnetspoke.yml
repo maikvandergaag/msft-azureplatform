@@ -5,6 +5,7 @@ on:
     paths:
       - 'templatespec/azinternalvm/*'
       - .github/workflows/templatespec-azvnetspoke.yml
+      - .module/vnet-peering.bicep
     branches: [ main ]
   pull_request:
     branches: [ main ]

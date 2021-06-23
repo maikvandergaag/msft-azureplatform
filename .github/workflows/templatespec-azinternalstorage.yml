@@ -5,6 +5,7 @@ on:
     paths:
       - 'templatespec/azinternalstorage/*'
       - .github/workflows/azinternalstorage.yml
+      - .module/storage-account.bicep
     branches: [ main ]
   pull_request:
     branches: [ main ]
