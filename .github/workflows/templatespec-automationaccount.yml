@@ -5,6 +5,7 @@ on:
     paths:
       - 'templatespec/automationaccount/*'
       - .github/workflows/templatespec-automationaccount.yml
+      - .module/log-analytics.bicep
     branches: [ main ]
   pull_request:
     branches: [ main ]

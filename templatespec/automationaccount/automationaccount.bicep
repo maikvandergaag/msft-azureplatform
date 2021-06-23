@@ -3,14 +3,16 @@ param location string = resourceGroup().location
 
 //diagnostics
 param logAnalyticsWorkspaceName string
-param logAnalyticsResourceGroup string
 
 //automationAccount
 param automationaccountName string
 
-resource log_analytics 'Microsoft.OperationalInsights/workspaces@2020-03-01-preview' existing = {
+module logAnalyticsWorkspace '../../.module/log-analytics.bicep' = {
   name: logAnalyticsWorkspaceName
-  scope: resourceGroup(logAnalyticsResourceGroup)
+  params:{
+    location:location
+    logAnalyticsWorkspaceName:logAnalyticsWorkspaceName
+  }
 }
 
 resource automation_account 'Microsoft.Automation/automationAccounts@2015-10-31' = {
@@ -27,7 +29,7 @@ resource automation_account_diagnostic 'microsoft.insights/diagnosticSettings@20
   name: '${automationaccountName}-diag' 
   scope: automation_account
   properties: {
-    workspaceId: log_analytics.id
+    workspaceId: logAnalyticsWorkspace.outputs.workspaceId
     logs: [
       {
         category: 'JobLogs'

@@ -49,13 +49,11 @@ resource vnetHub 'Microsoft.Network/virtualNetworks@2020-05-01' = {
   }
 }
 
-resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-08-01' = {
+module logAnalyticsWorkspace '../../.module/log-analytics.bicep' = {
   name: logAnalyticsWorkspaceName
-  location: location
-  properties: {
-    sku: {
-      name: 'Free'
-    }
+  params:{
+    location:location
+    logAnalyticsWorkspaceName:logAnalyticsWorkspaceName
   }
 }
 
@@ -63,7 +61,7 @@ resource diagVnetHub 'microsoft.insights/diagnosticSettings@2017-05-01-preview' 
   name: 'azvnet-diag'
   scope: vnetHub
   properties: {
-    workspaceId: logAnalyticsWorkspace.id
+    workspaceId: logAnalyticsWorkspace.outputs.workspaceId
     logs: [
       {
         category: 'VMProtectionAlerts'
