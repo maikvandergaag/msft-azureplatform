@@ -9,12 +9,12 @@ param adminPassword string
 
 //network
 param nicName string = 'azvm-pint-nic-001'
-param privateIP string
+param privateIP string = '11.1.*.*'
 
 //internal networking
-param localVnetName string
+param localVnetName string = 'azvnet-spoke-*'
 param subnetName string = 'azvnet-spoke-resources'
-param networkResourceGroup string
+param networkResourceGroup string = '*-rg-vnetspoke'
 
 module internalvm '../../.module/virtual-machine.bicep' ={
   name: 'internalvm'
