@@ -1,4 +1,4 @@
-name: Template spec - Azure Virtual Desktop
+name: Template spec - Azure Internal Storage
  
 on:
   push:
