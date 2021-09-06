@@ -4,6 +4,8 @@ on:
     paths:
       - 'templatespec/privateendpoint/*'
       - .github/workflows/templatespec-privateendpoint.yml
+      - .module/vnet-subnet-appservices.bicep
+      - .module/vnet-subnet-private.bicep
     branches: [ main ]
   pull_request:
     branches: [ main ]

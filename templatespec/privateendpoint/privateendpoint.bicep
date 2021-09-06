@@ -31,30 +31,22 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-06-01' existing 
   scope: resourceGroup(networkResourceGroup)
 }
 
-resource subnetPrivate 'Microsoft.Network/virtualNetworks/subnets@2020-06-01' = {
+module subnetPrivate '../../.module/vnet-subnet-private.bicep' = {
   name: '${virtualNetwork.name}/${subnetPrivateName}'
-  properties: {
-    addressPrefix: subnetPrivate_CIDR
-    privateEndpointNetworkPolicies: 'Disabled'
+  params:{
+    subnet_CIDR:subnetPrivate_CIDR
+    subnetName:subnetPrivateName
+    virtualNetworkName:virtualNetwork.name
   }
+  scope: resourceGroup(networkResourceGroup)
 }
 
-resource subnetInt 'Microsoft.Network/virtualNetworks/subnets@2020-06-01' = {
+module subnetInt '../../.module/vnet-subnet-appservices.bicep' = {
   name: '${virtualNetwork.name}/${subnetIntName}' 
-  dependsOn: [
-    subnetPrivate
-  ]
-  properties: {
-    addressPrefix: subnetInt_CIDR
-    delegations: [
-      {
-        name: 'delegation'
-        properties: {
-          serviceName: 'Microsoft.Web/serverfarms'
-        }
-      }
-    ]
-    privateEndpointNetworkPolicies: 'Enabled'
+  scope: resourceGroup(networkResourceGroup)
+  params:{
+    subnet_CIDR:subnetInt_CIDR
+    subnetName:subnetIntName
   }
 }
 
