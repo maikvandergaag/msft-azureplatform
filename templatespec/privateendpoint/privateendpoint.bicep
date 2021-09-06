@@ -17,6 +17,7 @@ param webAppIntName string = 'azappserv-*-*'
 param virtualNetworkName string = 'azvnet-spoke-*'
 param subnetIntName string = 'azvnet-spoke-resources'
 param subnetPrivateName string = 'azvnet-spoke-resources'
+param networkResourceGroup string = '*-rg-vnetspoke'
 
 //private endpoint
 param privateEndpointName string = 'azpriv-endpointwebapp'
@@ -25,6 +26,7 @@ var privateDNSZoneName = 'privatelink.azurewebsites.net'
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-06-01' existing = {
   name: virtualNetworkName
+  scope: resourceGroup(networkResourceGroup)
 }
 
 resource subnetInt 'Microsoft.Network/virtualNetworks/subnets@2020-06-01' existing =  {
