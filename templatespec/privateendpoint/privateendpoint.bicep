@@ -32,7 +32,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-06-01' existing 
 }
 
 module subnetPrivate '../../.module/vnet-subnet-private.bicep' = {
-  name: '${virtualNetwork.name}/${subnetPrivateName}'
+  name: subnetPrivateName
   params:{
     subnet_CIDR:subnetPrivate_CIDR
     subnetName:subnetPrivateName
@@ -42,7 +42,7 @@ module subnetPrivate '../../.module/vnet-subnet-private.bicep' = {
 }
 
 module subnetInt '../../.module/vnet-subnet-appservices.bicep' = {
-  name: '${virtualNetwork.name}/${subnetIntName}' 
+  name: subnetIntName 
   scope: resourceGroup(networkResourceGroup)
   params:{
     subnet_CIDR:subnetInt_CIDR
