@@ -38,6 +38,9 @@ module subnetPrivate '../../.module/vnet-subnet-private.bicep' = {
     subnetName:subnetPrivateName
     virtualNetworkName:virtualNetwork.name
   }
+  dependsOn:[
+    subnetInt
+  ]
   scope: resourceGroup(networkResourceGroup)
 }
 
