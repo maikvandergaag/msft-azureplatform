@@ -142,7 +142,7 @@ resource webAppIntNetworkConfig 'Microsoft.Web/sites/networkConfig@2020-06-01' =
   parent: webAppInt
   name: 'virtualNetwork'
   properties: {
-    subnetResourceId: subnetInt.id
+    subnetResourceId: subnetInt.outputs.id
   }
 }
 
@@ -151,7 +151,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2020-06-01' = {
   location: location
   properties: {
     subnet: {
-      id: subnetPrivate.id
+      id: subnetPrivate.outputs.id
     }
     privateLinkServiceConnections: [
       {

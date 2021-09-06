@@ -18,3 +18,5 @@ resource subnet 'Microsoft.Network/virtualNetworks/subnets@2020-06-01' = {
     privateEndpointNetworkPolicies: 'Enabled'
   }
 }
+
+output id string = subnet.id
