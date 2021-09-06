@@ -1,4 +1,4 @@
-param virtualNetworkName string = 'azvnet-spoke-*'
+param virtualNetworkName string
 param subnetName string = 'azvnet-spoke-resources'
 param subnet_CIDR string = '11.1.4.0/28'
 

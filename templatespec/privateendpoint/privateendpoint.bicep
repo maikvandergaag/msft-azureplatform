@@ -47,6 +47,7 @@ module subnetInt '../../.module/vnet-subnet-appservices.bicep' = {
   params:{
     subnet_CIDR:subnetInt_CIDR
     subnetName:subnetIntName
+    virtualNetworkName:virtualNetwork.name
   }
 }
 
