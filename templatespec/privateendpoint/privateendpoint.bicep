@@ -86,7 +86,6 @@ resource webAppPrivate 'Microsoft.Web/sites@2020-06-01' = {
   }
 }
 
-
 resource webAppInt 'Microsoft.Web/sites@2020-06-01' = {
   name: webAppIntName
   location: location
@@ -125,7 +124,6 @@ resource webAppInt 'Microsoft.Web/sites@2020-06-01' = {
     }
   }
 }
-
 
 resource webAppIntNetworkConfig 'Microsoft.Web/sites/networkConfig@2020-06-01' = {
   parent: webAppInt
