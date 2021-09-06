@@ -16,6 +16,8 @@ param webAppIntName string = 'azappserv-*-*'
 //internal networking
 param virtualNetworkName string = 'azvnet-spoke-*'
 param subnetIntName string = 'azvnet-spoke-resources'
+param subnetInt_CIDR string = '11.1.4.0/28'
+param subnetPrivate_CIDR string = '11.1.3.0/28'
 param subnetPrivateName string = 'azvnet-spoke-resources'
 param networkResourceGroup string = '*-rg-vnetspoke'
 
@@ -29,14 +31,31 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2020-06-01' existing 
   scope: resourceGroup(networkResourceGroup)
 }
 
-resource subnetInt 'Microsoft.Network/virtualNetworks/subnets@2020-06-01' existing =  {
-  parent: virtualNetwork
-  name: subnetIntName
+resource subnetPrivate 'Microsoft.Network/virtualNetworks/subnets@2020-06-01' = {
+  name: '${virtualNetwork.name}/${subnetPrivateName}'
+  properties: {
+    addressPrefix: subnetPrivate_CIDR
+    privateEndpointNetworkPolicies: 'Disabled'
+  }
 }
 
-resource subnetPrivate 'Microsoft.Network/virtualNetworks/subnets@2020-06-01' existing = {
-  parent: virtualNetwork
-  name: subnetPrivateName
+resource subnetInt 'Microsoft.Network/virtualNetworks/subnets@2020-06-01' = {
+  name: '${virtualNetwork.name}/${subnetIntName}' 
+  dependsOn: [
+    subnetPrivate
+  ]
+  properties: {
+    addressPrefix: subnetInt_CIDR
+    delegations: [
+      {
+        name: 'delegation'
+        properties: {
+          serviceName: 'Microsoft.Web/serverfarms'
+        }
+      }
+    ]
+    privateEndpointNetworkPolicies: 'Enabled'
+  }
 }
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02-preview' = {
