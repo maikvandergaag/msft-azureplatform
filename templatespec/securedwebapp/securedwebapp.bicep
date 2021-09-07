@@ -7,7 +7,7 @@ param frontdoorName string = 'azfrontdoor-*'
   'Detection'
 ])
 param frontDoorWafMode string = 'Prevention'
-param frontdoorWafName string = 'azfrontdoorwaf-*'
+param frontdoorWafName string = 'azfrontdoorwaf*'
 
 //application insights
 param appInsightsName string = 'azinsights-*'
@@ -98,6 +98,23 @@ resource webApp1 'Microsoft.Web/sites@2020-06-01' = {
           value: location1
         }
       ]
+      ipSecurityRestrictions:[
+        {
+          action:'Allow'
+          description:'Allow only frontdoor backend'
+          ipAddress: 'AzureFrontDoor.Backend'
+          tag: 'ServiceTag'
+          priority: 100
+          name: 'Frontdoor'
+        }
+        {
+          action:'Deny'
+          description:'Deny all'
+          ipAddress: 'Any'
+          priority: 2147483647
+          name: 'Deny all'
+        }
+      ]
     }
   }
 }
@@ -127,6 +144,23 @@ resource webApp2 'Microsoft.Web/sites@2020-06-01' = {
         {
           name: 'Location'
           value: location2
+        }
+      ]
+      ipSecurityRestrictions:[
+        {
+          action:'Allow'
+          description:'Allow only frontdoor backend'
+          ipAddress: 'AzureFrontDoor.Backend'
+          tag: 'ServiceTag'
+          priority: 100
+          name: 'Frontdoor'
+        }
+        {
+          action:'Deny'
+          description:'Deny all'
+          ipAddress: 'Any'
+          priority: 2147483647
+          name: 'Deny all'
         }
       ]
     }
