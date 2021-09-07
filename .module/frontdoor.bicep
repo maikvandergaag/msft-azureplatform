@@ -124,7 +124,28 @@ resource frontdoorWAF 'Microsoft.Network/FrontDoorWebApplicationFirewallPolicies
       customBlockResponseStatusCode: 403
     }
     customRules: {
-      rules: []
+      rules: [
+        {
+          priority: 10
+          enabledState: 'Enabled'
+          name: 'RateLimitRule'
+          rateLimitDurationInMinutes: 1
+          rateLimitThreshold: 10
+          matchConditions: [
+            {
+              matchValue:[
+                'NL'
+              ]
+              operator:'GeoMatch'
+              matchVariable:'RemoteAddr'
+              negateCondition: true
+              transforms:[]
+            }
+          ]
+          action: 'Block'
+          ruleType: 'RateLimitRule'
+        }
+      ]
     }
     managedRules: {
       managedRuleSets: [
