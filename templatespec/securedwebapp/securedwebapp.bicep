@@ -1,8 +1,16 @@
 //frontdoor
 param frontdoorName string = 'azfrontdoor-*'
 
+//WAF
+@allowed([
+  'Prevention'
+  'Detection'
+])
+param frontDoorWafMode string = 'Prevention'
+param frontdoorWafName string = 'azfrontdoorwaf-*'
+
 //application insights
-param appInsightsName string
+param appInsightsName string = 'azinsights-*'
 
 //hosting plan
 param hostingPlanName1 string = 'azhp-*-001'
@@ -25,6 +33,8 @@ module frontdoor '../../.module/frontdoor.bicep' ={
     frontDoorName: frontdoorName
     backendAddress1: webApp1.properties.defaultHostName
     backendAddress2: webApp2.properties.defaultHostName
+    frontDoorWafMode:frontDoorWafMode
+    frontDoorWafName:frontdoorWafName
   }
 }
 
@@ -83,6 +93,10 @@ resource webApp1 'Microsoft.Web/sites@2020-06-01' = {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
           value: 'InstrumentationKey=${appInsights.properties.InstrumentationKey}'
         }
+        {
+          name: 'Location'
+          value: location1
+        }
       ]
     }
   }
@@ -109,6 +123,10 @@ resource webApp2 'Microsoft.Web/sites@2020-06-01' = {
         {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
           value: 'InstrumentationKey=${appInsights.properties.InstrumentationKey}'
+        }
+        {
+          name: 'Location'
+          value: location2
         }
       ]
     }

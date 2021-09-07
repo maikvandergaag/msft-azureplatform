@@ -3,6 +3,14 @@ param frontDoorName string
 param backendAddress1 string
 param backendAddress2 string
 
+//WAF
+param frontDoorWafName string
+@allowed([
+  'Prevention'
+  'Detection'
+])
+param frontDoorWafMode string = 'Prevention'
+
 resource frontDoor 'Microsoft.Network/frontDoors@2020-01-01' = {
   name: frontDoorName
   location: 'global'
@@ -15,6 +23,9 @@ resource frontDoor 'Microsoft.Network/frontDoors@2020-01-01' = {
         properties: {
           hostName: '${frontDoorName}.azurefd.net'
           sessionAffinityEnabledState: 'Disabled'
+          webApplicationFirewallPolicyLink: {
+            id: '${frontdoorWAF.id}'
+          }
         }
       }
     ]
@@ -100,5 +111,30 @@ resource frontDoor 'Microsoft.Network/frontDoors@2020-01-01' = {
         }
       }
     ]
+  }
+}
+
+resource frontdoorWAF 'Microsoft.Network/FrontDoorWebApplicationFirewallPolicies@2019-10-01' = {
+  name: frontDoorWafName
+  location: 'Global'
+  properties: {
+    policySettings: {
+      enabledState: 'Enabled'
+      mode: frontDoorWafMode
+      customBlockResponseStatusCode: 403
+    }
+    customRules: {
+      rules: []
+    }
+    managedRules: {
+      managedRuleSets: [
+        {
+          ruleSetType: 'DefaultRuleSet'
+          ruleSetVersion: '1.0'
+          ruleGroupOverrides: []
+          exclusions: []
+        }
+      ]
+    }
   }
 }
