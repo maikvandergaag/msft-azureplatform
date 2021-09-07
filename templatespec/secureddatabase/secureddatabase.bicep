@@ -20,7 +20,7 @@ param networkResourceGroup string = '*-rg-vnetspoke'
 //Private Endpoint
 param privateEndpointName string = 'azpriv-endpointsqlapp'
 param privateLinkConnectionName string = 'azpriv-endpointsqlapp-link'
-var privateDNSZoneName = 'privatelink.${environment().suffixes.sqlServerHostname}'
+var privateDNSZoneName = 'privatelink${environment().suffixes.sqlServerHostname}'
 
 module sql '../../.module/sql.bicep' ={
   name: sqlServerName
