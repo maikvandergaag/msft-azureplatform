@@ -22,6 +22,7 @@ resource sqlServer 'Microsoft.Sql/servers@2020-02-02-preview' = {
     administratorLogin: sqlAdministratorLogin
     administratorLoginPassword: sqlAdministratorLoginPassword
     version: '12.0'
+    publicNetworkAccess: 'Disabled'
   }
 }
 
