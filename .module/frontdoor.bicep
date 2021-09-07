@@ -34,7 +34,7 @@ resource frontDoor 'Microsoft.Network/frontDoors@2020-01-01' = {
         name: 'healthProbeSettings'
         properties: {
           path: '/'
-          protocol: 'Http'
+          protocol: 'Https'
           intervalInSeconds: 120
         }
       }
@@ -84,16 +84,17 @@ resource frontDoor 'Microsoft.Network/frontDoors@2020-01-01' = {
             }
           ]
           acceptedProtocols: [
-            'Http'
             'Https'
           ]
           patternsToMatch: [
             '/*'
           ]
           routeConfiguration: {
-            '@odata.type': '#Microsoft.Azure.FrontDoor.Models.FrontdoorRedirectConfiguration'
-            redirectProtocol: 'HttpsOnly'
-            redirectType: 'Moved'
+            '@odata.type': '#Microsoft.Azure.FrontDoor.Models.FrontdoorForwardingConfiguration'
+            forwardingProtocol: 'HttpsOnly'
+            backendPool:{
+               id: resourceId('Microsoft.Network/frontDoors/backendPools', frontDoorName, 'backendPool')
+            } 
           }
           enabledState: 'Enabled'
         }
