@@ -1,4 +1,4 @@
-name: Template spec - Spoke virtual network
+name: Template spec - Secured Web Application
  
 on:
   push:
