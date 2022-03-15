@@ -21,11 +21,10 @@ jobs:
     - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
+        enable-AzPSSession: true 
     - name: Run Azure PowerShell script
       uses: azure/powershell@v1
       with:
         inlineScript: |
           ./scripts/azpolicy.ps1 -Scope "${{env.Scope}}" -ScopeName "${{env.ScopeName}}" -PolicyFolder "${{env.Folder}}"
         azPSVersion: "latest"
-    
-          
