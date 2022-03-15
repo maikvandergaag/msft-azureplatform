@@ -7,6 +7,11 @@ on:
         required: false
         default: 'Updating Azure Policies'
 
+env:
+  Folder: './policies/deploy'
+  Scope: 'ManagementGroup'
+  ScopeName: '324f7296-1869-4489-b11e-912351f38ead'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,10 +21,11 @@ jobs:
     - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
-    - name: Create or Update Azure Policies
-      uses: azure/manage-azure-policy@v0
-      with:      
-        paths:  |                  
-          policies/**
+    - name: Run Azure PowerShell script
+      uses: azure/powershell@v1
+      with:
+        inlineScript: |
+          ./scripts/azpolicy.ps1 -Scope "${{env.Scope}}" -ScopeName "${{env.ScopeName}}" -PolicyFolder "${{env.Folder}}"
+        azPSVersion: "latest"
     
           
