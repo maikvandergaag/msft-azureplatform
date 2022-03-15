@@ -1,8 +1,11 @@
-name: Azure Policies
-
+name: Policy - All Policies
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      remarks:
+        description: 'Reason for triggering the workflow run'
+        required: false
+        default: 'Updating Azure Policies'
 
 jobs:
   build:
