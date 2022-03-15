@@ -11,7 +11,7 @@ variables:
   - name: scopeName
     value: "324f7296-1869-4489-b11e-912351f38ead"
   - name: folder
-    value: "../policies/deploy"
+    value: "./policies/deploy"
 
 steps:
 - task: AzurePowerShell@5
