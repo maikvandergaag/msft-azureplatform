@@ -1,0 +1,419 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.1124.51302",
+      "templateHash": "10346192678003255879"
+    }
+  },
+  "parameters": {
+    "policyCategory": {
+      "type": "string",
+      "defaultValue": "Custom"
+    },
+    "policySource": {
+      "type": "string",
+      "defaultValue": "Guardrails"
+    },
+    "lockTag": {
+      "type": "string",
+      "defaultValue": "environment"
+    },
+    "lockValue": {
+      "type": "string",
+      "defaultValue": "prd"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/policySetDefinitions",
+      "apiVersion": "2021-06-01",
+      "name": "corporate_initiative",
+      "properties": {
+        "policyType": "Custom",
+        "displayName": "Corporate Initiative",
+        "description": "Corporate Initiative containing all corporate guardrails",
+        "metadata": {
+          "category": "[parameters('policyCategory')]",
+          "source": "[parameters('policySource')]",
+          "version": "0.1.0"
+        },
+        "parameters": {},
+        "policyDefinitions": [
+          {
+            "policyDefinitionId": "[reference(extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'auditPolicy'), '2020-10-01').outputs.policyDefId.value]",
+            "parameters": {}
+          },
+          {
+            "policyDefinitionId": "[reference(extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'auditResourceLock'), '2020-10-01').outputs.policyDefId.value]",
+            "parameters": {
+              "tagName": {
+                "value": "[parameters('lockTag')]"
+              },
+              "tagValue": {
+                "value": "[parameters('lockValue')]"
+              }
+            }
+          },
+          {
+            "policyDefinitionId": "[reference(extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'deployResourceLock'), '2020-10-01').outputs.policyDefId.value]",
+            "parameters": {
+              "tagName": {
+                "value": "[parameters('lockTag')]"
+              },
+              "tagValue": {
+                "value": "[parameters('lockValue')]"
+              }
+            }
+          }
+        ]
+      },
+      "dependsOn": [
+        "[extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'auditPolicy')]",
+        "[extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'auditResourceLock')]",
+        "[extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'deployResourceLock')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "auditPolicy",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "policyCategory": {
+            "value": "[parameters('policyCategory')]"
+          },
+          "policySource": {
+            "value": "[parameters('policySource')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.1124.51302",
+              "templateHash": "1942810589437954973"
+            }
+          },
+          "parameters": {
+            "policyCategory": {
+              "type": "string",
+              "defaultValue": "Custom"
+            },
+            "policySource": {
+              "type": "string",
+              "defaultValue": "Guardrails"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/policyDefinitions",
+              "apiVersion": "2021-06-01",
+              "name": "audit hybrid use benefit",
+              "properties": {
+                "displayName": "Audit hybrid use benefit",
+                "description": "Auditing of VMs without the Hybrid use benefit",
+                "policyType": "Custom",
+                "mode": "All",
+                "metadata": {
+                  "category": "[parameters('policyCategory')]",
+                  "source": "[parameters('policySource')]",
+                  "version": "0.1.0",
+                  "securityCenter": {
+                    "RemediationDescription": "Check the possibility of using Hyrbid Benefit",
+                    "Severity": "Low"
+                  }
+                },
+                "parameters": {},
+                "policyRule": {
+                  "if": {
+                    "allOf": [
+                      {
+                        "field": "type",
+                        "in": [
+                          "Microsoft.Compute/virtualMachines",
+                          "Microsoft.Compute/VirtualMachineScaleSets"
+                        ]
+                      },
+                      {
+                        "field": "Microsoft.Compute/licenseType",
+                        "notEquals": "Windows_Server"
+                      }
+                    ]
+                  },
+                  "then": {
+                    "effect": "audit"
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": {
+            "policyDefId": {
+              "type": "string",
+              "value": "[extensionResourceId(managementGroup().id, 'Microsoft.Authorization/policyDefinitions', 'audit hybrid use benefit')]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "auditResourceLock",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "policyCategory": {
+            "value": "[parameters('policyCategory')]"
+          },
+          "policySource": {
+            "value": "[parameters('policySource')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.1124.51302",
+              "templateHash": "6744038971433498878"
+            }
+          },
+          "parameters": {
+            "policyCategory": {
+              "type": "string",
+              "defaultValue": "Custom"
+            },
+            "policySource": {
+              "type": "string",
+              "defaultValue": "Guardrails"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/policyDefinitions",
+              "apiVersion": "2021-06-01",
+              "name": "Audit resource locks based on tags",
+              "properties": {
+                "displayName": "Audit Resource Locks on Resource Groups based on Tags",
+                "description": "Audit the use of resource locks on resource groups based on tags used",
+                "policyType": "Custom",
+                "mode": "All",
+                "metadata": {
+                  "category": "[parameters('policyCategory')]",
+                  "source": "[parameters('policySource')]",
+                  "version": "0.1.0",
+                  "securityCenter": {
+                    "RemediationDescription": "The resource group should have a resource locks assigned. Go to the resource group and assign a resource lock or adjust the tag value",
+                    "Severity": "High"
+                  }
+                },
+                "parameters": {
+                  "tagName": {
+                    "type": "String",
+                    "metadata": {
+                      "displayName": "Tag Name",
+                      "description": "The Tag name to audit against (i.e. Environment, CostCenter, etc.)"
+                    }
+                  },
+                  "tagValue": {
+                    "type": "String",
+                    "metadata": {
+                      "displayName": "Tag Value",
+                      "description": "Value of the tag to audit against (i.e. Prod/UAT/TEST, 12345, etc.)"
+                    }
+                  }
+                },
+                "policyRule": {
+                  "if": {
+                    "allOf": [
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+                      },
+                      {
+                        "field": "[[concat('tags[', parameters('tagName'), ']')]",
+                        "equals": "[[parameters('tagValue')]"
+                      }
+                    ]
+                  },
+                  "then": {
+                    "effect": "auditIfNotExists",
+                    "details": {
+                      "type": "Microsoft.Authorization/locks",
+                      "existenceCondition": {
+                        "field": "Microsoft.Authorization/locks/level",
+                        "equals": "CanNotDelete"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": {
+            "policyDefId": {
+              "type": "string",
+              "value": "[extensionResourceId(managementGroup().id, 'Microsoft.Authorization/policyDefinitions', 'Audit resource locks based on tags')]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "deployResourceLock",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "policyCategory": {
+            "value": "[parameters('policyCategory')]"
+          },
+          "policySource": {
+            "value": "[parameters('policySource')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.1124.51302",
+              "templateHash": "2100255460839930931"
+            }
+          },
+          "parameters": {
+            "policyCategory": {
+              "type": "string",
+              "defaultValue": "Custom"
+            },
+            "policySource": {
+              "type": "string",
+              "defaultValue": "Guardrails"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/policyDefinitions",
+              "apiVersion": "2021-06-01",
+              "name": "Deploy resource locks based on tags",
+              "properties": {
+                "displayName": "Deploy Resource Locks on Resource Groups based on Tags",
+                "description": "Deploy resource locks on resource groups based on tags used",
+                "policyType": "Custom",
+                "mode": "All",
+                "metadata": {
+                  "category": "[parameters('policyCategory')]",
+                  "source": "[parameters('policySource')]",
+                  "version": "0.1.0",
+                  "securityCenter": {
+                    "RemediationDescription": "The resource group should have a resource locks assigned. Go to the resource group and assign a resource lock or adjust the tag value",
+                    "Severity": "High"
+                  }
+                },
+                "parameters": {
+                  "tagName": {
+                    "type": "String",
+                    "metadata": {
+                      "displayName": "Tag Name",
+                      "description": "The Tag name to audit against (i.e. Environment CostCenter etc.)"
+                    }
+                  },
+                  "tagValue": {
+                    "type": "String",
+                    "metadata": {
+                      "displayName": "Tag Value",
+                      "description": "Value of the tag to audit against (i.e. Prod/UAT/TEST 12345 etc.)"
+                    }
+                  }
+                },
+                "policyRule": {
+                  "if": {
+                    "allOf": [
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+                      },
+                      {
+                        "field": "[[concat('tags[', parameters('tagName'), ']')]",
+                        "equals": "[[parameters('tagValue')]"
+                      }
+                    ]
+                  },
+                  "then": {
+                    "effect": "deployIfNotExists",
+                    "details": {
+                      "type": "Microsoft.Authorization/locks",
+                      "roleDefinitionIds": [
+                        "/providers/microsoft.authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+                      ],
+                      "existenceCondition": {
+                        "field": "Microsoft.Authorization/locks/level",
+                        "equals": "CanNotDelete"
+                      },
+                      "deployment": {
+                        "properties": {
+                          "mode": "incremental",
+                          "template": {
+                            "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {},
+                            "variables": {},
+                            "resources": [
+                              {
+                                "name": "DontDelete",
+                                "type": "Microsoft.Authorization/locks",
+                                "apiVersion": "2017-04-01",
+                                "properties": {
+                                  "level": "CanNotDelete",
+                                  "notes": "Prevent deletion of the resource group"
+                                }
+                              }
+                            ],
+                            "outputs": {
+                              "policy": {
+                                "type": "string",
+                                "value": "[[concat('Added resource lock')]"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": {
+            "policyDefId": {
+              "type": "string",
+              "value": "[extensionResourceId(managementGroup().id, 'Microsoft.Authorization/policyDefinitions', 'Deploy resource locks based on tags')]"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
