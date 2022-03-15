@@ -1,0 +1,22 @@
+name: Azure Policies
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
+    - name: Create or Update Azure Policies
+      uses: azure/manage-azure-policy@v0
+      with:      
+        paths:  |                  
+          policies/**
+    
+          
