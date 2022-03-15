@@ -1,7 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
 
 trigger:
 - main
@@ -9,11 +5,21 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+  - name: scope
+    value: "ManagementGroup"
+  - name: scopeName
+    value: "324f7296-1869-4489-b11e-912351f38ead"
+  - name: folder
+    value: "./policies/deploy"
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+steps:
+- task: AzurePowerShell@5
+  inputs:
+    displayName: 'Deploy Azure Policy Definitions'
+    azureSubscription: 'Root Management Group Connection'
+    ScriptType: 'FilePath'
+    ScriptPath: './scripts/azpolicy.ps1'
+    ScriptArguments: '-Scope "$(scope)" -ScopeName "$(scopeName)" -PolicyFolder "$(folder)"'
+    azurePowerShellVersion: 'LatestVersion'
+    pwsh: true
