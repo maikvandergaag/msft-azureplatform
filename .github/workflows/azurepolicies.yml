@@ -8,7 +8,7 @@ on:
         default: 'Updating Azure Policies'
 
 env:
-  Folder: './policies/deploy'
+  Folder: './deploy'
   Scope: 'ManagementGroup'
   ScopeName: '324f7296-1869-4489-b11e-912351f38ead'
 
