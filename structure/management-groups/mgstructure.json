@@ -1,0 +1,33 @@
+{
+  "tier1": [
+    {
+      "name": "LandingZones",
+      "id": "all"
+    },
+    {
+      "name": "Platform",
+      "id": "757e3844-970a-4e24-94fa-f4153f8a20a5"
+    }
+  ],
+  "tier2": [
+    {
+      "name": "Personal",
+      "id": "Personal",
+      "parentId": "all"
+    },
+    {
+      "name": "Sandbox",
+      "id": "b27ac091-3de5-46d1-8f61-add3171f6e53",
+      "parentId": "all"
+    },
+    {
+        "name": "Work",
+        "id": "Work",
+        "parentId": "all"
+      }
+  ],
+  "tier3": [],
+  "tier4": [],
+  "tier5": [],
+  "tier6": []
+}
