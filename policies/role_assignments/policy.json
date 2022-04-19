@@ -27,7 +27,7 @@
       }
     }
   },
-  "id": "/providers/Microsoft.Management/managementGroups/324f7296-1869-4489-b11e-912351f38ead/providers/Microsoft.Authorization/policyDefinitions/4dacb992-e822-4106-9fb9-009b24b7b09f",
+  "id": "/providers/Microsoft.Management/managementGroups/324f7296-1869-4489-b11e-912351f38ead/providers/Microsoft.Authorization/policyDefinitions/686bac3f-68f2-4f00-aa2c-892609b765ee",
   "type": "Microsoft.Authorization/policyDefinitions",
-  "name": "4dacb992-e822-4106-9fb9-009b24b7b09f"
+  "name": "686bac3f-68f2-4f00-aa2c-892609b765ee"
 }

@@ -18,7 +18,7 @@ foreach ($policyFile in $policyFiles) {
 
     $policyDefinitionFileContent = Get-Content -Raw -Path $PolicyFile
     $policyDefinitionFile = ConvertFrom-Json $policyDefinitionFileContent
-    $policyDefinitionName = $policyDefinitionFile.properties.displayName
+    $policyDefinitionName = $policyDefinitionFile.name
 
     $parameters = @{}
     $parameters.Add("Name", $policyDefinitionName)
