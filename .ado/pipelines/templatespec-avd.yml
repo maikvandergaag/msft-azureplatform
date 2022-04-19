@@ -21,7 +21,7 @@ variables:
 
 
 stages:
-  - template: stages-specs.yml
+  - template: templates/stages-specs.yml
     parameters:
       bicepPath: '$(bicepPath)'
       bicepFolder: '$(bicepFolder)'
