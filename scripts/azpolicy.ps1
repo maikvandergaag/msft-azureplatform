@@ -11,7 +11,7 @@ Param(
     [string]$RoleIds
 )
 
-$policyFiles = Get-ChildItem -Path $PolicyFolder -Recurse -Filter "*.json"
+$policyFiles = Get-ChildItem -Path $PolicyFolder -Recurse -Filter "policy.json"
 foreach ($policyFile in $policyFiles) {
 
     Write-Output "Working on Policy: $($policyFile.Name)"
