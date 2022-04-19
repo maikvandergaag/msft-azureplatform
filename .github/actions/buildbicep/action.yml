@@ -27,7 +27,7 @@ runs:
       uses: actions/upload-artifact@v2
       with:
         name: ${{inputs.specName}}
-        path: ${{inputs.specfolder}}.bicep
+        path: ${{inputs.specFolder}}.bicep
     - name: Archive production scripts
       uses: actions/upload-artifact@v2
       with:
