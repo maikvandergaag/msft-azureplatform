@@ -1,0 +1,33 @@
+{
+  "properties": {
+    "displayName": "Role Assignments trough Groups",
+    "policyType": "Custom",
+    "mode": "All",
+    "metadata": {
+      "category": "Role Assignments"
+    },
+    "parameters": {},
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Authorization/roleAssignments"
+          },
+          {
+            "not": {
+              "field": "Microsoft.Authorization/roleAssignments/principalType",
+              "equals": "Group"
+            }
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    }
+  },
+  "id": "/providers/Microsoft.Management/managementGroups/324f7296-1869-4489-b11e-912351f38ead/providers/Microsoft.Authorization/policyDefinitions/4dacb992-e822-4106-9fb9-009b24b7b09f",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "name": "4dacb992-e822-4106-9fb9-009b24b7b09f"
+}
