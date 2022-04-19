@@ -9,8 +9,6 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 env:
@@ -24,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - id: foo
+      - id: bicepbuild
         uses: ./.github/actions/buildbicep
         with:
           specFolder: ${{env.specfolder}}
@@ -33,29 +31,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-       - uses: actions/download-artifact@v2
-         name: Download template spec
+       - id: bicepbuild
+         uses: ./.github/actions/buildbicep
          with:
-             name: ${{env.specName}}
-       - uses: actions/download-artifact@v2
-         name: Download utility scripts
-         with:
-             name: ps-${{env.specName}}
-       - name: Azure Login
-         uses: Azure/login@v1
-         with:
-           creds: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
-           enable-AzPSSession: true
-       - name: Check versionnumber
-         uses: azure/powershell@v1
-         id: calculate
-         with:
-           inlineScript: |
-              .\Get-TemplateSpecVersion.ps1 -TemplateSpecName "${{env.specName}}" -ResourceGroupName "${{env.resourcegroup}}"
-           azPSVersion: '6.1.0'
-       - name: Create / Update template spec
-         uses: azure/powershell@v1
-         with:
-           inlineScript: |
-            New-AzTemplateSpec -Name "${{env.specName}}" -Version "${{ steps.calculate.outputs.versionnumber }}" -ResourceGroupName "${{env.resourcegroup}}" -Location "westeurope" -TemplateFile ".\${{env.specfilename}}"
-           azPSVersion: '6.1.0'
+           specFolder: ${{env.specfolder}}
+           specName: ${{env.specName}}
+           secret: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
+           resourceGroup: ${{env.resourcegroup}}
+           specFileName : ${{env.specfilename}}
