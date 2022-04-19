@@ -1,0 +1,48 @@
+parameters:
+- name : bicepFolder
+  default: ''
+- name : bicepPath
+  default: ''
+- name : fileName
+  default: ''
+- name: serviceConnection
+  default: ''
+- name: specName
+  default: ''
+- name: resourceGroup
+  default: ''
+- name: subscription
+  default: ''
+
+stages:
+  - stage: Build
+    displayName: 'Build Template Spec ARM'
+    pool:
+      vmImage: 'windows-latest'
+    continueOnError: false
+    steps:
+      - templates: ./ado/pipelines/templates/buildbicep.yml
+        parameters:
+          bicepPath: '$(bicepPath)'
+          bicepFolder: '$(bicepFolder)'
+  - stage: Deploy
+    displayName: 'Deploy Azure Template Spec'
+    dependsOn:
+      - Build
+    jobs:
+      - deployment: TemplateSpecDeployment
+        displayName: Deploy Template Spec
+        pool:
+          vmImage: 'windows-latest'
+        environment: 'Azure Platform'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - templates: ./ado/pipelines/templates/deploytemplatespec.yml
+                  parameters:
+                    fileName: '$(fileName)'
+                    serviceConnection: '$(serviceConnection)'
+                    specName: '$(specName)'
+                    resourceGroup: '$(resourceGroup)'
+                    subscription: '$(subscription)'

@@ -1,0 +1,35 @@
+parameters:
+- name : bicepFolder
+  default: ''
+- name : bicepPath
+  default: ''
+
+steps:
+  - task: PowerShell@2
+    displayName: "Install bicep"
+    inputs:
+      targetType: "inline"
+      script: |
+        $installDir = New-Item -ItemType Directory -Path "${{ parameters.bicepFolder}}" -Force
+        $installDir.Attributes += 'Hidden'
+        (New-Object Net.WebClient).DownloadFile(https://github.com/Azure/bicep/releases/latest/download/bicep-win-x64.exe, "${{ parameters.bicepFolder}}\bicep.exe")
+      pwsh: true
+  - task: PowerShell@2
+    displayName: "Build bicep file"
+    inputs:
+      targetType: "inline"
+      script: |
+        cd '${{ parameters.bicepFolder}}'
+        .\bicep.exe build '${{parameters.bicepPath}}.bicep'
+      pwsh: true
+  - task: CopyFiles@2
+    displayName: "Copy - bicep files"
+    inputs:
+      SourceFolder: ${{parameters.bicepPath}}
+      TargetFolder: '$(Build.ArtifactStagingDirectory)\template'
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish - Artifacts"
+    inputs:
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+      ArtifactName: "drop"
+      publishLocation: "Container"

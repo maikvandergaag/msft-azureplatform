@@ -25,24 +25,33 @@ Param
     [Parameter(Mandatory = $true)]
     [String]$TemplateSpecName,
     [Parameter(Mandatory = $true)]
-    [String]$ResourceGroupName
+    [String]$ResourceGroupName,
+    [Switch]$ADO
 )
 
-process{
+process {
     $version = (Get-AzTemplateSpec -Name "$TemplateSpecName" -ResourceGroupName "$ResourceGroupName" -ErrorAction SilentlyContinue).Versions
-    if($version){
-        $version = $version[$version.length -1].Name
-        $version= [string]$version
+    if ($version) {
+        $version = $version[$version.length - 1].Name
+        $version = [string]$version
         $minor = [int]$version.Split('.')[1]
         $major =
-         [int]$version.Split('.')[0]
+        [int]$version.Split('.')[0]
         $minor = $minor + 1
-        if($minor -eq 9){
+        if ($minor -eq 9) {
             $major = $major + 1
             $minor = 0
         }
-        echo "::set-output name=versionnumber::$major.$minor"
-    }else{
-        echo "::set-output name=versionnumber::0.1"
+        $versionNumber = "$($major).$($minor)"
+    }
+    else {
+        $versionNumber = "0.1"
+    }
+
+    if ($ADO) {
+        Write-Host "##vso[task.setvariable variable=versionnumber]$versionNumber"
+    }
+    else {
+        echo "::set-output name=versionnumber::$versionNumber"
     }
 }
