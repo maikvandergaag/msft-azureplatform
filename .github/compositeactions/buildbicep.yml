@@ -1,0 +1,26 @@
+name: "Build Bicep Template"
+description: "Composite actions of building Bicep files and saving them to the archive."
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        curl -Lo bicepinstall https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64
+        chmod +x ./bicepinstall
+        sudo mv ./bicepinstall /usr/local/bin/bicep
+        bicep --help
+    - run:  bicep build ${{env.specfolder}}.bicep
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{env.specName}}
+        path: ${{env.specfolder}}.json
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{env.specName}}
+        path: ${{env.specfolder}}.bicep
+    - name: Archive production scripts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ps-${{env.specName}}
+        path: ./utilities/*.ps1

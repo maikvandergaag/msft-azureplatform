@@ -24,22 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          curl -Lo bicepinstall https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64
-          chmod +x ./bicepinstall
-          sudo mv ./bicepinstall /usr/local/bin/bicep
-          bicep --help
-      - run:  bicep build ${{env.specfolder}}.bicep
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{env.specName}}
-          path: ${{env.specfolder}}.*
-      - name: Archive production scripts
-        uses: actions/upload-artifact@v2
-        with:
-          name: ps-${{env.specName}}
-          path: ./utilities/*.ps1
+      - uses: ./.github/compositeactions/buildbicep.yml
   deploy:
     needs: build
     runs-on: ubuntu-latest
