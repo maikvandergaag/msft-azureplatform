@@ -42,7 +42,7 @@ stages:
           runOnce:
             deploy:
               steps:
-                - template: ./ado/pipelines/templates/deploytemplatespec.yml
+                - template: deploytemplatespec.yml
                   parameters:
                     fileName: "$(fileName)"
                     serviceConnection: "$(serviceConnection)"
