@@ -28,6 +28,6 @@ steps:
       ScriptType: 'InlineScript'
       Inline: |
        Set-AzContext ${{ parameters.subscription }}
-       New-AzTemplateSpec -Name "${{parameters.specName}}" -Version "$(versionnumber)" -ResourceGroupName "${{parameters.resourceGroup}}" -Location "westeurope" -TemplateFile "$(Pipeline.Workspace)\drop\template\${{parameters.fileName}}"
+       New-AzTemplateSpec -Name "${{parameters.specName}}" -Version "$(versionnumber)" -ResourceGroupName "${{parameters.resourceGroup}}" -Location "westeurope" -TemplateFile "$(Pipeline.Workspace)\drop\template\${{parameters.fileName}}.json"
       azurePowerShellVersion: 'LatestVersion'
       pwsh: true

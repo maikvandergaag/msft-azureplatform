@@ -48,6 +48,7 @@ process {
         $versionNumber = "0.1"
     }
 
+    Write-Output "New versionnumber will be: $($versionNumber)"
     if ($ADO) {
         Write-Host "##vso[task.setvariable variable=versionnumber]$versionNumber"
     }
