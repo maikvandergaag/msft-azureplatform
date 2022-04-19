@@ -15,8 +15,8 @@ variables:
 
 steps:
 - task: AzurePowerShell@5
+  displayName: 'Deploy Azure Policy Definitions'
   inputs:
-    displayName: 'Deploy Azure Policy Definitions'
     azureSubscription: 'Root Management Group Connection'
     ScriptType: 'FilePath'
     ScriptPath: './scripts/azpolicy.ps1'
