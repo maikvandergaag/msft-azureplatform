@@ -1,0 +1,47 @@
+name: TS - Certified Storage
+
+on:
+  push:
+    paths:
+      - 'templatespec/certifiedstorage/*'
+      - .github/workflows/templatespec-certifiedstorage.yml
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  specName: az-tempspec-certifiedstorage
+  specfolder: './templatespec/certifiedstorage/storage'
+  specfilename: storage.json
+  resourcegroup: mpn-rg-templates
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - id: bicepbuild
+        uses: ./.github/actions/buildbicep
+        with:
+          specFolder: ${{env.specfolder}}
+          specName: ${{env.specName}}
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+       - uses: actions/checkout@v2
+       - id: deployspec
+         uses: ./.github/actions/deploytemplatespec
+         with:
+           specFolder: ${{env.specfolder}}
+           specName: ${{env.specName}}
+           secret: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
+           resourceGroup: ${{env.resourcegroup}}
+           specFileName : ${{env.specfilename}}
+           clientId: ${{ secrets.AZURE_CLIENT_ID }}
+           clientSecret: ${{ secrets.AZURE_CLIENT_SECRET }}
+           tenantId: ${{ secrets.AZURE_TENANT_ID }}
+           azureSubscription: 1fd221fd-5347-47fa-9fd6-fb4fa7f31251
