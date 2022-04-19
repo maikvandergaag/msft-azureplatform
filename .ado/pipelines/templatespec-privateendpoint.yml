@@ -1,0 +1,31 @@
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: bicepFolder
+    value: "$(Build.Repository.LocalPath)/bicepInstall"
+  - name: bicepPath
+    value: "$(Build.Repository.LocalPath)/templatespec/privateendpoint"
+  - name: fileName
+    value: "privateendpoint"
+  - name: serviceConnection
+    value: "az-platform"
+  - name: specName
+    value: "az-tempspec-privateendpoint"
+  - name: resourceGroup
+    value: "mpn-rg-templates"
+  - name: subscription
+    value: "1fd221fd-5347-47fa-9fd6-fb4fa7f31251"
+
+extends:
+  template: templates/stages-specs.yml
+  parameters:
+    bicepPath: '$(bicepPath)'
+    bicepFolder: '$(bicepFolder)'
+    fileName: '$(fileName)'
+    serviceConnection: '$(serviceConnection)'
+    specName: '$(specName)'
+    resourceGroup: '$(resourceGroup)'
+    subscription: '$(subscription)'
