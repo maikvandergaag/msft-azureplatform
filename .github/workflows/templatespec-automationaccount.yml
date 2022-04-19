@@ -1,5 +1,5 @@
-name: Template spec - Automation Account
- 
+name: TS - Automation Account
+
 on:
   push:
     paths:
