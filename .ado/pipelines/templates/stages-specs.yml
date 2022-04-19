@@ -24,7 +24,7 @@ stages:
             vmImage: "windows-latest"
         continueOnError: false
         steps:
-        - template: ./ado/pipelines/templates/buildbicep.yml
+        - template: buildbicep.yml
           parameters:
             bicepPath: "$(bicepPath)"
             bicepFolder: "$(bicepFolder)"
