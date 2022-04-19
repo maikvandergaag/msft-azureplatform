@@ -1,5 +1,5 @@
-name: Template spec - Secured SQL Database
- 
+name: TS - Secured SQL Database
+
 on:
   push:
     paths:
@@ -17,56 +17,32 @@ env:
   specName: az-tempspec-secureddatabase
   specfolder: './templatespec/secureddatabase/secureddatabase'
   specfilename: secureddatabase.json
-  resourcegroup: gaag-rg-templates
+  resourcegroup: mpn-rg-templates
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: | 
-          curl -Lo bicepinstall https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64
-          chmod +x ./bicepinstall
-          sudo mv ./bicepinstall /usr/local/bin/bicep
-          bicep --help
-      - run:    bicep build ${{env.specfolder}}.bicep
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+      - id: bicepbuild
+        uses: ./.github/actions/buildbicep
         with:
-          name: ${{env.specName}}
-          path: ${{env.specfolder}}.json
-      - name: Archive production scripts
-        uses: actions/upload-artifact@v2
-        with:
-          name: ps-${{env.specName}}
-          path: ./utilities/*.ps1
+          specFolder: ${{env.specfolder}}
+          specName: ${{env.specName}}
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
-       - uses: actions/download-artifact@v2
-         name: Download template spec
+       - uses: actions/checkout@v2
+       - id: deployspec
+         uses: ./.github/actions/deploytemplatespec
          with:
-             name: ${{env.specName}}
-       - uses: actions/download-artifact@v2
-         name: Download utility scripts
-         with:
-             name: ps-${{env.specName}}
-       - name: Azure Login
-         uses: Azure/login@v1
-         with:
-           creds: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
-           enable-AzPSSession: true 
-       - name: Check versionnumber
-         uses: azure/powershell@v1
-         id: calculate
-         with:
-           inlineScript: |
-              .\Get-TemplateSpecVersion.ps1 -TemplateSpecName "${{env.specName}}" -ResourceGroupName "${{env.resourcegroup}}"
-           azPSVersion: '6.1.0'
-       - name: Create / Update template spec
-         uses: azure/powershell@v1
-         with:
-           inlineScript: |
-            New-AzTemplateSpec -Name "${{env.specName}}" -Version "${{ steps.calculate.outputs.versionnumber }}" -ResourceGroupName "${{env.resourcegroup}}" -Location "westeurope" -TemplateFile ".\${{env.specfilename}}"
-           azPSVersion: '6.1.0'
+           specFolder: ${{env.specfolder}}
+           specName: ${{env.specName}}
+           secret: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
+           resourceGroup: ${{env.resourcegroup}}
+           specFileName : ${{env.specfilename}}
+           clientId: ${{ secrets.AZURE_CLIENT_ID }}
+           clientSecret: ${{ secrets.AZURE_CLIENT_SECRET }}
+           tenantId: ${{ secrets.AZURE_TENANT_ID }}
+           azureSubscription: 1fd221fd-5347-47fa-9fd6-fb4fa7f31251
