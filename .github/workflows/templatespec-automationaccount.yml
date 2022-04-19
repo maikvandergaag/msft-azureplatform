@@ -15,7 +15,7 @@ env:
   specName: az-tempspec-automationaccount
   specfolder: './templatespec/automationaccount/automationaccount'
   specfilename: automationaccount.json
-  resourcegroup: gaag-rg-templates
+  resourcegroup: mpn-rg-templates
 
 jobs:
   build:
