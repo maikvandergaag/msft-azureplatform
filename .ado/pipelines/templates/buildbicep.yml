@@ -29,6 +29,11 @@ steps:
     inputs:
       SourceFolder: ${{parameters.bicepPath}}
       TargetFolder: '$(Build.ArtifactStagingDirectory)\template'
+  - task: CopyFiles@2
+    displayName: "Copy - utility scripts"
+    inputs:
+      SourceFolder: $(Build.Repository.LocalPath)\utilities
+      TargetFolder: '$(Build.ArtifactStagingDirectory)\utilities'
   - task: PublishBuildArtifacts@1
     displayName: "Publish - Artifacts"
     inputs:
