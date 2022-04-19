@@ -24,7 +24,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: /.github/compositeactions/buildbicep.yml
+      - id: foo
+        uses: .github/compositeactions/buildbicep@v1
+        with:
+          specFolder: ${{env.specFolder}}
+          specName: ${{env.specName}}
   deploy:
     needs: build
     runs-on: ubuntu-latest

@@ -1,5 +1,12 @@
 name: "Build Bicep Template"
 description: "Composite actions of building Bicep files and saving them to the archive."
+inputs:
+  specfolder:
+    description: 'Specification folder'
+    required: true
+  specName:
+    description: 'Specification name'
+    required: true
 runs:
   using: "composite"
   steps:
@@ -8,19 +15,19 @@ runs:
         chmod +x ./bicepinstall
         sudo mv ./bicepinstall /usr/local/bin/bicep
         bicep --help
-    - run:  bicep build ${{env.specfolder}}.bicep
+    - run:  bicep build ${{inputs.specfolder}}.bicep
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ${{env.specName}}
-        path: ${{env.specfolder}}.json
+        name: ${{inputs.specName}}
+        path: ${{inputs.specfolder}}.json
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ${{env.specName}}
-        path: ${{env.specfolder}}.bicep
+        name: ${{inputs.specName}}
+        path: ${{inputs.specfolder}}.bicep
     - name: Archive production scripts
       uses: actions/upload-artifact@v2
       with:
-        name: ps-${{env.specName}}
+        name: ps-${{inputs.specName}}
         path: ./utilities/*.ps1
