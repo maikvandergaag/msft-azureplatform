@@ -31,8 +31,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-       - id: bicepbuild
-         uses: ./.github/actions/buildbicep
+       - uses: actions/checkout@v2
+       - id: deployspec
+         uses: ./.github/actions/deploytemplatespec
          with:
            specFolder: ${{env.specfolder}}
            specName: ${{env.specName}}
