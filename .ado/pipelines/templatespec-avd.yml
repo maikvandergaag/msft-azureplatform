@@ -7,7 +7,7 @@ variables:
   - name: bicepFolder
     value: "$(Build.Repository.LocalPath)/bicepInstall"
   - name: bicepPath
-    value: "$(Build.Repository.LocalPath)/templatespec/avd/avd"
+    value: "$(Build.Repository.LocalPath)/templatespec/avd"
   - name: fileName
     value: "avd"
   - name: serviceConnection

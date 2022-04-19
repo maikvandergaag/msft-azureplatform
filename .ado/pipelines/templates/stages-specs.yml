@@ -28,6 +28,7 @@ stages:
           parameters:
             bicepPath: "$(bicepPath)"
             bicepFolder: "$(bicepFolder)"
+            fileName: "$(fileName)"
   - stage: Deploy
     displayName: "Deploy Azure Template Spec"
     dependsOn:

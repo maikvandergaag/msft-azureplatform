@@ -3,6 +3,8 @@ parameters:
   default: ''
 - name : bicepPath
   default: ''
+- name : fileName
+  default: ''
 
 steps:
   - task: PowerShell@2
@@ -20,7 +22,7 @@ steps:
       targetType: "inline"
       script: |
         cd '${{ parameters.bicepFolder}}'
-        .\bicep.exe build '${{parameters.bicepPath}}.bicep'
+        .\bicep.exe build '${{parameters.bicepPath}}/${{parameters.fileName}}.bicep'
       pwsh: true
   - task: CopyFiles@2
     displayName: "Copy - bicep files"
