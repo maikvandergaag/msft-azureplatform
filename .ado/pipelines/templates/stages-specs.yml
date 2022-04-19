@@ -21,7 +21,7 @@ stages:
       - job:
         displayName: "Build Template Spec ARM"
         pool:
-        vmImage: "windows-latest"
+            vmImage: "windows-latest"
         continueOnError: false
         steps:
         - templates: ./ado/pipelines/templates/buildbicep.yml
