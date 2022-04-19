@@ -19,10 +19,10 @@ steps:
       azurePowerShellVersion: 'LatestVersion'
       Inline: |
        Set-AzContext ${{ parameters.subscription }}
-       $(Pipeline.Workspace)\drop\utilities\Get-TemplateSpecVersion.ps1 -TemplateSpecName "${{parameters.specName}}" -ResourceGroupName "${{parameters.resourceGroup}} -ADO
+       $(Pipeline.Workspace)\drop\utilities\Get-TemplateSpecVersion.ps1 -TemplateSpecName "${{parameters.specName}}" -ResourceGroupName "${{parameters.resourceGroup}}" -ADO
       pwsh: true
   - task: AzurePowerShell@5
-    displayName: "Get Template Spec Version"
+    displayName: "Deploy Template Spec"
     inputs:
       azureSubscription: '${{ parameters.serviceConnection }}'
       ScriptType: 'InlineScript'
