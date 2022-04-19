@@ -11,7 +11,7 @@ variables:
   - name: fileName
     value: "avd"
   - name: serviceConnection
-    value: "Root Management Group Connection"
+    value: "az-platform"
   - name: specName
     value: "az-tempspec-avd"
   - name: resourceGroup
