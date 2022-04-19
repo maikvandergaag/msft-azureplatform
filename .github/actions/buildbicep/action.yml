@@ -15,9 +15,9 @@ runs:
         chmod +x ./bicepinstall
         sudo mv ./bicepinstall /usr/local/bin/bicep
         bicep --help
-      shell: powershell
+      shell: bash
     - run:  bicep build ${{inputs.specfolder}}.bicep
-      shell: powershell
+      shell: bash
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
