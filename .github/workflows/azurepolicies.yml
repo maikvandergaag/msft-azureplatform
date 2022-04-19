@@ -21,7 +21,7 @@ jobs:
     - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
-        enable-AzPSSession: true 
+        enable-AzPSSession: true
     - name: Run Azure PowerShell script
       uses: azure/powershell@v1
       with:
