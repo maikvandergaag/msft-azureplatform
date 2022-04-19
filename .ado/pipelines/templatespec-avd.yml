@@ -5,9 +5,9 @@ pool:
 
 variables:
   - name: bicepFolder
-    value: "./bicepInstall"
+    value: "$(Build.Repository.LocalPath)/bicepInstall"
   - name: bicepPath
-    value: "./templatespec/avd/avd"
+    value: "$(Build.Repository.LocalPath)/templatespec/avd/avd"
   - name: fileName
     value: "avd"
   - name: serviceConnection
