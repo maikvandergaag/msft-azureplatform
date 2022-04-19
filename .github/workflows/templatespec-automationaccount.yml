@@ -16,7 +16,7 @@ on:
 env:
   specName: az-tempspec-automationaccount
   specfolder: './templatespec/automationaccount/automationaccount'
-  specfilename: automationaccount.bicep
+  specfilename: automationaccount.json
   resourcegroup: gaag-rg-templates
 
 jobs:
