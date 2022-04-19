@@ -40,3 +40,7 @@ jobs:
            secret: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
            resourceGroup: ${{env.resourcegroup}}
            specFileName : ${{env.specfilename}}
+           clientId: ${{ secrets.AZURE_CLIENT_ID }}
+           clientSecret: ${{ secrets.AZURE_CLIENT_SECRET }}
+           tenantId: ${{ secrets.AZURE_TENANT_ID }}
+           azureSubscription: 1fd221fd-5347-47fa-9fd6-fb4fa7f31251
