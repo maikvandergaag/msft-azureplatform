@@ -16,7 +16,7 @@ on:
 env:
   specName: az-tempspec-automationaccount
   specfolder: './templatespec/automationaccount/automationaccount'
-  specfilename: automationaccount.json
+  specfilename: automationaccount.bicep
   resourcegroup: gaag-rg-templates
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: | 
+      - run: |
           curl -Lo bicepinstall https://github.com/Azure/bicep/releases/latest/download/bicep-linux-x64
           chmod +x ./bicepinstall
           sudo mv ./bicepinstall /usr/local/bin/bicep
@@ -56,7 +56,7 @@ jobs:
          uses: Azure/login@v1
          with:
            creds: ${{ secrets.AZURE_CREDENTIALS_MANAGEMENTGROUP }}
-           enable-AzPSSession: true 
+           enable-AzPSSession: true
        - name: Check versionnumber
          uses: azure/powershell@v1
          id: calculate
