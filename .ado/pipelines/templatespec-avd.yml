@@ -19,14 +19,13 @@ variables:
   - name: subscription
     value: "1fd221fd-5347-47fa-9fd6-fb4fa7f31251"
 
-
-stages:
-  - template: templates/stages-specs.yml
-    parameters:
-      bicepPath: '$(bicepPath)'
-      bicepFolder: '$(bicepFolder)'
-      fileName: '$(fileName)'
-      serviceConnection: '$(serviceConnection)'
-      specName: '$(specName)'
-      resourceGroup: '$(resourceGroup)'
-      subscription: '$(subscription)'
+extends:
+  template: templates/stages-specs.yml
+  parameters:
+    bicepPath: '$(bicepPath)'
+    bicepFolder: '$(bicepFolder)'
+    fileName: '$(fileName)'
+    serviceConnection: '$(serviceConnection)'
+    specName: '$(specName)'
+    resourceGroup: '$(resourceGroup)'
+    subscription: '$(subscription)'
