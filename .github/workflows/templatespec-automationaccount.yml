@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: foo
-        uses: .github/compositeactions/buildbicep@v1
+        uses: .github/compositeactions/buildbicep.yml@v1
         with:
           specFolder: ${{env.specFolder}}
           specName: ${{env.specName}}
