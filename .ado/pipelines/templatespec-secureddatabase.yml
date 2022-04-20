@@ -15,9 +15,9 @@ variables:
   - name: specName
     value: "az-tempspec-secureddatabase"
   - name: resourceGroup
-    value: "mpn-rg-templates"
+    value: "gaag-rg-templates"
   - name: subscription
-    value: "1fd221fd-5347-47fa-9fd6-fb4fa7f31251"
+    value: "5b389701-0e47-4738-b4fe-ddb67ac3a036"
 
 extends:
   template: templates/stages-specs.yml

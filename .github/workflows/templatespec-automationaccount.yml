@@ -15,7 +15,7 @@ env:
   specName: az-tempspec-automationaccount
   specfolder: './templatespec/automationaccount/automationaccount'
   specfilename: automationaccount.json
-  resourcegroup: mpn-rg-templates
+  resourcegroup: gaag-rg-templates
 
 jobs:
   build:
@@ -43,4 +43,4 @@ jobs:
            clientId: ${{ secrets.AZURE_CLIENT_ID }}
            clientSecret: ${{ secrets.AZURE_CLIENT_SECRET }}
            tenantId: ${{ secrets.AZURE_TENANT_ID }}
-           azureSubscription: 1fd221fd-5347-47fa-9fd6-fb4fa7f31251
+           azureSubscription: 5b389701-0e47-4738-b4fe-ddb67ac3a036
